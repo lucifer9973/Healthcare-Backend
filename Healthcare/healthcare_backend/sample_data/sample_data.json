@@ -1,0 +1,69 @@
+[
+  {
+    "model": "authentication.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$1200000$QAoIMxuTcMhbZY9BKZQbve$FsDnMjJeN6Nkh3D1FxHSn5iuvLLX5wp6BFx6ge+4cSc=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-08T00:00:00Z",
+      "name": "Demo User",
+      "email": "demo@example.com",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "doctors.doctor",
+    "pk": 1,
+    "fields": {
+      "full_name": "Dr. Aisha Mehta",
+      "specialization": "Cardiology",
+      "email": "aisha.mehta@example.com",
+      "phone": "+15550101010",
+      "hospital_name": "CityCare Hospital",
+      "years_of_experience": 12,
+      "created_at": "2026-05-08T00:00:00Z"
+    }
+  },
+  {
+    "model": "doctors.doctor",
+    "pk": 2,
+    "fields": {
+      "full_name": "Dr. Noah Chen",
+      "specialization": "Neurology",
+      "email": "noah.chen@example.com",
+      "phone": "+15550202020",
+      "hospital_name": "Metro Health",
+      "years_of_experience": 9,
+      "created_at": "2026-05-08T00:00:00Z"
+    }
+  },
+  {
+    "model": "patients.patient",
+    "pk": 1,
+    "fields": {
+      "full_name": "Priya Sharma",
+      "age": 34,
+      "gender": "female",
+      "phone": "+15550303030",
+      "address": "12 Park Avenue",
+      "medical_history": "Hypertension",
+      "created_by": 1,
+      "created_at": "2026-05-08T00:00:00Z"
+    }
+  },
+  {
+    "model": "mappings.patientdoctormapping",
+    "pk": 1,
+    "fields": {
+      "patient": 1,
+      "doctor": 1,
+      "assigned_at": "2026-05-08T00:00:00Z"
+    }
+  }
+]
