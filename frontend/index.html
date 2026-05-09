@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Management System - Patient & Doctor Management</title>
+    <meta name="description" content="Healthcare Management System for managing patients, doctors, and their assignments">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar" style="display: none;">
+            <div class="nav-container">
+                <h1>Healthcare System</h1>
+                <div class="nav-menu">
+                    <button onclick="showDashboard()" class="nav-btn">Dashboard</button>
+                    <button onclick="showPatients()" class="nav-btn">Patients</button>
+                    <button onclick="showDoctors()" class="nav-btn">Doctors</button>
+                    <button onclick="showMappings()" class="nav-btn">Mappings</button>
+                    <button onclick="logout()" class="nav-btn logout">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="page">
+            <div class="auth-container">
+                <h2>Login</h2>
+                <form id="loginForm" onsubmit="login(event)">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+                <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div id="registerPage" class="page" style="display: none;">
+            <div class="auth-container">
+                <h2>Register</h2>
+                <form id="registerForm" onsubmit="register(event)">
+                    <input type="text" id="registerName" placeholder="Full Name" required>
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                    <input type="password" id="registerPassword" placeholder="Password" required>
+                    <button type="submit">Register</button>
+                </form>
+                <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboardPage" class="page" style="display: none;">
+            <div class="container">
+                <h2>Dashboard</h2>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <h3>Total Patients</h3>
+                        <p id="totalPatients">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Doctors</h3>
+                        <p id="totalDoctors">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Mappings</h3>
+                        <p id="totalMappings">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Page -->
+        <div id="patientsPage" class="page" style="display: none;">
+            <div class="container">
+                <h2>Patients</h2>
+                <button onclick="showAddPatientForm()" class="btn-primary">Add Patient</button>
+                
+                <div id="patientForm" class="form-container" style="display: none;">
+                    <h3>Add New Patient</h3>
+                    <form id="addPatientForm" onsubmit="addPatient(event)">
+                        <input type="text" id="patientName" placeholder="Full Name" required>
+                        <input type="number" id="patientAge" placeholder="Age" required>
+                        <select id="patientGender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <input type="tel" id="patientPhone" placeholder="Phone" required>
+                        <textarea id="patientAddress" placeholder="Address" required></textarea>
+                        <textarea id="patientMedicalHistory" placeholder="Medical History"></textarea>
+                        <button type="submit">Save Patient</button>
+                        <button type="button" onclick="hidePatientForm()">Cancel</button>
+                    </form>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" id="patientSearch" placeholder="Search patients..." onkeyup="searchPatients()">
+                </div>
+
+                <div id="patientsList" class="list-container"></div>
+            </div>
+        </div>
+
+        <!-- Doctors Page -->
+        <div id="doctorsPage" class="page" style="display: none;">
+            <div class="container">
+                <h2>Doctors</h2>
+                <button onclick="showAddDoctorForm()" class="btn-primary">Add Doctor</button>
+                
+                <div id="doctorForm" class="form-container" style="display: none;">
+                    <h3>Add New Doctor</h3>
+                    <form id="addDoctorForm" onsubmit="addDoctor(event)">
+                        <input type="text" id="doctorName" placeholder="Full Name" required>
+                        <input type="text" id="doctorSpecialization" placeholder="Specialization" required>
+                        <input type="email" id="doctorEmail" placeholder="Email" required>
+                        <input type="tel" id="doctorPhone" placeholder="Phone" required>
+                        <input type="text" id="doctorHospital" placeholder="Hospital Name" required>
+                        <input type="number" id="doctorExperience" placeholder="Years of Experience" required>
+                        <button type="submit">Save Doctor</button>
+                        <button type="button" onclick="hideDoctorForm()">Cancel</button>
+                    </form>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" id="doctorSearch" placeholder="Search doctors..." onkeyup="searchDoctors()">
+                </div>
+
+                <div id="doctorsList" class="list-container"></div>
+            </div>
+        </div>
+
+        <!-- Mappings Page -->
+        <div id="mappingsPage" class="page" style="display: none;">
+            <div class="container">
+                <h2>Patient-Doctor Mappings</h2>
+                <button onclick="showAddMappingForm()" class="btn-primary">Add Mapping</button>
+                
+                <div id="mappingForm" class="form-container" style="display: none;">
+                    <h3>Add New Mapping</h3>
+                    <form id="addMappingForm" onsubmit="addMapping(event)">
+                        <select id="mappingPatient" required>
+                            <option value="">Select Patient</option>
+                        </select>
+                        <select id="mappingDoctor" required>
+                            <option value="">Select Doctor</option>
+                        </select>
+                        <button type="submit">Save Mapping</button>
+                        <button type="button" onclick="hideMappingForm()">Cancel</button>
+                    </form>
+                </div>
+
+                <div id="mappingsList" class="list-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
