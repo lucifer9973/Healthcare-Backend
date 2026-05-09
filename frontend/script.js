@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = 'https://healthcare-backend-1f7x.onrender.com/api';
 
 // State Management
 let currentUser = null;

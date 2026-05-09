@@ -1,0 +1,15 @@
+{
+  "name": "healthcare-frontend",
+  "version": "1.0.0",
+  "description": "Healthcare Backend Frontend",
+  "main": "index.html",
+  "scripts": {
+    "start": "python serve.py",
+    "dev": "python serve.py"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": ["healthcare", "frontend", "django", "api"],
+  "author": "Healthcare Team",
+  "license": "MIT"
+}
