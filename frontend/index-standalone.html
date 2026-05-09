@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Management System - Patient & Doctor Management</title>
+    <meta name="description" content="Healthcare Management System for managing patients, doctors, and their assignments">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-container h1 {
+            color: #667eea;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.logout {
+            background: #e53e3e;
+        }
+
+        .nav-btn.logout:hover {
+            background: #c53030;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-container {
+            text-align: center;
+        }
+
+        .auth-container h2 {
+            color: #667eea;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        input, select, textarea {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: #48bb78;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary:hover {
+            background: #38a169;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .message.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .message.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .list-container {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .list-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-item h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .list-item p {
+            color: #666;
+            margin: 0.25rem 0;
+        }
+
+        .btn-delete {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #c53030;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .page {
+                padding: 1rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar" style="display: none;">
+            <div class="nav-container">
+                <h1>Healthcare System</h1>
+                <div class="nav-menu">
+                    <button onclick="showDashboard()" class="nav-btn">Dashboard</button>
+                    <button onclick="showPatients()" class="nav-btn">Patients</button>
+                    <button onclick="showDoctors()" class="nav-btn">Doctors</button>
+                    <button onclick="showMappings()" class="nav-btn">Mappings</button>
+                    <button onclick="logout()" class="nav-btn logout">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="page">
+            <div class="auth-container">
+                <h2>Login</h2>
+                <form id="loginForm" onsubmit="login(event)">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+                <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div id="registerPage" class="page" style="display: none;">
+            <div class="auth-container">
+                <h2>Register</h2>
+                <form id="registerForm" onsubmit="register(event)">
+                    <input type="text" id="registerName" placeholder="Full Name" required>
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                    <input type="password" id="registerPassword" placeholder="Password" required>
+                    <button type="submit">Register</button>
+                </form>
+                <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboardPage" class="page" style="display: none;">
+            <div class="container">
+                <h2>Dashboard</h2>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <h3>Total Patients</h3>
+                        <p id="totalPatients">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Doctors</h3>
+                        <p id="totalDoctors">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Mappings</h3>
+                        <p id="totalMappings">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Page -->
+        <div id="patientsPage" class="page" style="display: none;">
+            <div class="container">
+                <h2>Patients</h2>
+                <button onclick="showAddPatientForm()" class="btn-primary">Add Patient</button>
+                
+                <div id="patientForm" class="form-container" style="display: none;">
+                    <h3>Add New Patient</h3>
+                    <form id="addPatientForm" onsubmit="addPatient(event)">
+                        <input type="text" id="patientName" placeholder="Full Name" required>
+                        <input type="number" id="patientAge" placeholder="Age" required>
+                        <select id="patientGender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <input type="tel" id="patientPhone" placeholder="Phone" required>
+                        <textarea id="patientAddress" placeholder="Address" required></textarea>
+                        <textarea id="patientMedicalHistory" placeholder="Medical History"></textarea>
+                        <button type="submit">Save Patient</button>
+                        <button type="button" onclick="hidePatientForm()">Cancel</button>
+                    </form>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" id="patientSearch" placeholder="Search patients..." onkeyup="searchPatients()">
+                </div>
+
+                <div id="patientsList" class="list-container"></div>
+            </div>
+        </div>
+
+        <!-- Doctors Page -->
+        <div id="doctorsPage" class="page" style="display: none;">
+            <div class="container">
+                <h2>Doctors</h2>
+                <button onclick="showAddDoctorForm()" class="btn-primary">Add Doctor</button>
+                
+                <div id="doctorForm" class="form-container" style="display: none;">
+                    <h3>Add New Doctor</h3>
+                    <form id="addDoctorForm" onsubmit="addDoctor(event)">
+                        <input type="text" id="doctorName" placeholder="Full Name" required>
+                        <input type="text" id="doctorSpecialization" placeholder="Specialization" required>
+                        <input type="email" id="doctorEmail" placeholder="Email" required>
+                        <input type="tel" id="doctorPhone" placeholder="Phone" required>
+                        <input type="text" id="doctorHospital" placeholder="Hospital Name" required>
+                        <input type="number" id="doctorExperience" placeholder="Years of Experience" required>
+                        <button type="submit">Save Doctor</button>
+                        <button type="button" onclick="hideDoctorForm()">Cancel</button>
+                    </form>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" id="doctorSearch" placeholder="Search doctors..." onkeyup="searchDoctors()">
+                </div>
+
+                <div id="doctorsList" class="list-container"></div>
+            </div>
+        </div>
+
+        <!-- Mappings Page -->
+        <div id="mappingsPage" class="page" style="display: none;">
+            <div class="container">
+                <h2>Patient-Doctor Mappings</h2>
+                <button onclick="showAddMappingForm()" class="btn-primary">Add Mapping</button>
+                
+                <div id="mappingForm" class="form-container" style="display: none;">
+                    <h3>Add New Mapping</h3>
+                    <form id="addMappingForm" onsubmit="addMapping(event)">
+                        <select id="mappingPatient" required>
+                            <option value="">Select Patient</option>
+                        </select>
+                        <select id="mappingDoctor" required>
+                            <option value="">Select Doctor</option>
+                        </select>
+                        <button type="submit">Save Mapping</button>
+                        <button type="button" onclick="hideMappingForm()">Cancel</button>
+                    </form>
+                </div>
+
+                <div id="mappingsList" class="list-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <script>
+        // API Configuration
+        const API_BASE = 'https://healthcare-backend-1f7x.onrender.com/api';
+
+        // State Management
+        let currentUser = null;
+        let accessToken = localStorage.getItem('accessToken');
+        let refreshToken = localStorage.getItem('refreshToken');
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            if (accessToken) {
+                showDashboard();
+            } else {
+                showLogin();
+            }
+        });
+
+        // Navigation Functions
+        function showLogin() {
+            hideAllPages();
+            document.getElementById('loginPage').style.display = 'block';
+        }
+
+        function showRegister() {
+            hideAllPages();
+            document.getElementById('registerPage').style.display = 'block';
+        }
+
+        function showDashboard() {
+            hideAllPages();
+            document.getElementById('navbar').style.display = 'flex';
+            document.getElementById('dashboardPage').style.display = 'block';
+            loadDashboardData();
+        }
+
+        function showPatients() {
+            hideAllPages();
+            document.getElementById('navbar').style.display = 'flex';
+            document.getElementById('patientsPage').style.display = 'block';
+            loadPatients();
+        }
+
+        function showDoctors() {
+            hideAllPages();
+            document.getElementById('navbar').style.display = 'flex';
+            document.getElementById('doctorsPage').style.display = 'block';
+            loadDoctors();
+        }
+
+        function showMappings() {
+            hideAllPages();
+            document.getElementById('navbar').style.display = 'flex';
+            document.getElementById('mappingsPage').style.display = 'block';
+            loadMappings();
+        }
+
+        function hideAllPages() {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.style.display = 'none');
+        }
+
+        // Authentication Functions
+        async function login(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('accessToken', data.access);
+                    localStorage.setItem('refreshToken', data.refresh);
+                    accessToken = data.access;
+                    refreshToken = data.refresh;
+                    showMessage('Login successful!', 'success');
+                    showDashboard();
+                } else {
+                    showMessage(data.message || 'Login failed', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('Network error. Please check your connection and try again.', 'error');
+            }
+        }
+
+        async function register(event) {
+            event.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/register/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('Registration successful! Please login.', 'success');
+                    showLogin();
+                } else {
+                    showMessage(data.message || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showMessage('Network error. Please check your connection and try again.', 'error');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            accessToken = null;
+            refreshToken = null;
+            currentUser = null;
+            document.getElementById('navbar').style.display = 'none';
+            showLogin();
+            showMessage('Logged out successfully', 'success');
+        }
+
+        // API Helper Functions
+        async function fetchWithAuth(url, options = {}) {
+            const headers = {
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+            }
+
+            const response = await fetch(url, {
+                ...options,
+                headers
+            });
+
+            if (response.status === 401 && refreshToken) {
+                const newTokens = await refreshAccessToken();
+                if (newTokens) {
+                    headers['Authorization'] = `Bearer ${newTokens.access}`;
+                    return fetch(url, { ...options, headers });
+                }
+            }
+
+            return response;
+        }
+
+        async function refreshAccessToken() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/token/refresh/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ refresh: refreshToken })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('accessToken', data.access);
+                    accessToken = data.access;
+                    return data;
+                }
+            } catch (error) {
+                console.error('Token refresh error:', error);
+                logout();
+            }
+        }
+
+        // Dashboard Functions
+        async function loadDashboardData() {
+            try {
+                const [patientsResponse, doctorsResponse, mappingsResponse] = await Promise.all([
+                    fetchWithAuth(`${API_BASE}/patients/`),
+                    fetchWithAuth(`${API_BASE}/doctors/`),
+                    fetchWithAuth(`${API_BASE}/mappings/`)
+                ]);
+
+                const patients = await patientsResponse.json();
+                const doctors = await doctorsResponse.json();
+                const mappings = await mappingsResponse.json();
+
+                document.getElementById('totalPatients').textContent = patients.count || 0;
+                document.getElementById('totalDoctors').textContent = doctors.count || 0;
+                document.getElementById('totalMappings').textContent = mappings.count || 0;
+            } catch (error) {
+                console.error('Dashboard data error:', error);
+                showMessage('Error loading dashboard data', 'error');
+            }
+        }
+
+        // Patient Functions
+        async function loadPatients() {
+            try {
+                const response = await fetchWithAuth(`${API_BASE}/patients/`);
+                const data = await response.json();
+                displayPatients(data.results || data);
+            } catch (error) {
+                console.error('Patients error:', error);
+                showMessage('Error loading patients', 'error');
+            }
+        }
+
+        function displayPatients(patients) {
+            const container = document.getElementById('patientsList');
+            container.innerHTML = '';
+
+            patients.forEach(patient => {
+                const patientDiv = document.createElement('div');
+                patientDiv.className = 'list-item';
+                patientDiv.innerHTML = `
+                    <div>
+                        <h3>${patient.full_name}</h3>
+                        <p>Age: ${patient.age}</p>
+                        <p>Gender: ${patient.gender}</p>
+                        <p>Phone: ${patient.phone}</p>
+                        <p>Address: ${patient.address}</p>
+                    </div>
+                    <button class="btn-delete" onclick="deletePatient(${patient.id})">Delete</button>
+                `;
+                container.appendChild(patientDiv);
+            });
+        }
+
+        function showAddPatientForm() {
+            document.getElementById('patientForm').style.display = 'block';
+        }
+
+        function hidePatientForm() {
+            document.getElementById('patientForm').style.display = 'none';
+        }
+
+        async function addPatient(event) {
+            event.preventDefault();
+            const formData = {
+                full_name: document.getElementById('patientName').value,
+                age: parseInt(document.getElementById('patientAge').value),
+                gender: document.getElementById('patientGender').value,
+                phone: document.getElementById('patientPhone').value,
+                address: document.getElementById('patientAddress').value,
+                medical_history: document.getElementById('patientMedicalHistory').value
+            };
+
+            try {
+                const response = await fetchWithAuth(`${API_BASE}/patients/`, {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    showMessage('Patient added successfully!', 'success');
+                    hidePatientForm();
+                    loadPatients();
+                } else {
+                    const data = await response.json();
+                    showMessage(data.message || 'Failed to add patient', 'error');
+                }
+            } catch (error) {
+                console.error('Add patient error:', error);
+                showMessage('Network error. Please try again.', 'error');
+            }
+        }
+
+        async function deletePatient(id) {
+            if (confirm('Are you sure you want to delete this patient?')) {
+                try {
+                    const response = await fetchWithAuth(`${API_BASE}/patients/${id}/`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        showMessage('Patient deleted successfully!', 'success');
+                        loadPatients();
+                    } else {
+                        showMessage('Failed to delete patient', 'error');
+                    }
+                } catch (error) {
+                    console.error('Delete patient error:', error);
+                    showMessage('Network error. Please try again.', 'error');
+                }
+            }
+        }
+
+        function searchPatients() {
+            const searchTerm = document.getElementById('patientSearch').value.toLowerCase();
+            const patientItems = document.querySelectorAll('#patientsList .list-item');
+            
+            patientItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+            });
+        }
+
+        // Doctor Functions
+        async function loadDoctors() {
+            try {
+                const response = await fetchWithAuth(`${API_BASE}/doctors/`);
+                const data = await response.json();
+                displayDoctors(data.results || data);
+            } catch (error) {
+                console.error('Doctors error:', error);
+                showMessage('Error loading doctors', 'error');
+            }
+        }
+
+        function displayDoctors(doctors) {
+            const container = document.getElementById('doctorsList');
+            container.innerHTML = '';
+
+            doctors.forEach(doctor => {
+                const doctorDiv = document.createElement('div');
+                doctorDiv.className = 'list-item';
+                doctorDiv.innerHTML = `
+                    <div>
+                        <h3>Dr. ${doctor.full_name}</h3>
+                        <p>Specialization: ${doctor.specialization}</p>
+                        <p>Email: ${doctor.email}</p>
+                        <p>Phone: ${doctor.phone}</p>
+                        <p>Hospital: ${doctor.hospital_name}</p>
+                        <p>Experience: ${doctor.years_of_experience} years</p>
+                    </div>
+                    <button class="btn-delete" onclick="deleteDoctor(${doctor.id})">Delete</button>
+                `;
+                container.appendChild(doctorDiv);
+            });
+        }
+
+        function showAddDoctorForm() {
+            document.getElementById('doctorForm').style.display = 'block';
+        }
+
+        function hideDoctorForm() {
+            document.getElementById('doctorForm').style.display = 'none';
+        }
+
+        async function addDoctor(event) {
+            event.preventDefault();
+            const formData = {
+                full_name: document.getElementById('doctorName').value,
+                specialization: document.getElementById('doctorSpecialization').value,
+                email: document.getElementById('doctorEmail').value,
+                phone: document.getElementById('doctorPhone').value,
+                hospital_name: document.getElementById('doctorHospital').value,
+                years_of_experience: parseInt(document.getElementById('doctorExperience').value)
+            };
+
+            try {
+                const response = await fetchWithAuth(`${API_BASE}/doctors/`, {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    showMessage('Doctor added successfully!', 'success');
+                    hideDoctorForm();
+                    loadDoctors();
+                } else {
+                    const data = await response.json();
+                    showMessage(data.message || 'Failed to add doctor', 'error');
+                }
+            } catch (error) {
+                console.error('Add doctor error:', error);
+                showMessage('Network error. Please try again.', 'error');
+            }
+        }
+
+        async function deleteDoctor(id) {
+            if (confirm('Are you sure you want to delete this doctor?')) {
+                try {
+                    const response = await fetchWithAuth(`${API_BASE}/doctors/${id}/`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        showMessage('Doctor deleted successfully!', 'success');
+                        loadDoctors();
+                    } else {
+                        showMessage('Failed to delete doctor', 'error');
+                    }
+                } catch (error) {
+                    console.error('Delete doctor error:', error);
+                    showMessage('Network error. Please try again.', 'error');
+                }
+            }
+        }
+
+        function searchDoctors() {
+            const searchTerm = document.getElementById('doctorSearch').value.toLowerCase();
+            const doctorItems = document.querySelectorAll('#doctorsList .list-item');
+            
+            doctorItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+            });
+        }
+
+        // Mapping Functions
+        async function loadMappings() {
+            try {
+                const [mappingsResponse, patientsResponse, doctorsResponse] = await Promise.all([
+                    fetchWithAuth(`${API_BASE}/mappings/`),
+                    fetchWithAuth(`${API_BASE}/patients/`),
+                    fetchWithAuth(`${API_BASE}/doctors/`)
+                ]);
+
+                const mappings = await mappingsResponse.json();
+                const patients = await patientsResponse.json();
+                const doctors = await doctorsResponse.json();
+
+                displayMappings(mappings.results || mappings);
+                populateMappingSelects(patients.results || patients, doctors.results || doctors);
+            } catch (error) {
+                console.error('Mappings error:', error);
+                showMessage('Error loading mappings', 'error');
+            }
+        }
+
+        function displayMappings(mappings) {
+            const container = document.getElementById('mappingsList');
+            container.innerHTML = '';
+
+            mappings.forEach(mapping => {
+                const mappingDiv = document.createElement('div');
+                mappingDiv.className = 'list-item';
+                mappingDiv.innerHTML = `
+                    <div>
+                        <h3>Patient: ${mapping.patient_name}</h3>
+                        <p>Doctor: ${mapping.doctor_name}</p>
+                        <p>Assigned: ${new Date(mapping.assigned_at).toLocaleDateString()}</p>
+                    </div>
+                    <button class="btn-delete" onclick="deleteMapping(${mapping.id})">Delete</button>
+                `;
+                container.appendChild(mappingDiv);
+            });
+        }
+
+        function populateMappingSelects(patients, doctors) {
+            const patientSelect = document.getElementById('mappingPatient');
+            const doctorSelect = document.getElementById('mappingDoctor');
+
+            patientSelect.innerHTML = '<option value="">Select Patient</option>';
+            patients.forEach(patient => {
+                patientSelect.innerHTML += `<option value="${patient.id}">${patient.full_name}</option>`;
+            });
+
+            doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+            doctors.forEach(doctor => {
+                doctorSelect.innerHTML += `<option value="${doctor.id}">Dr. ${doctor.full_name}</option>`;
+            });
+        }
+
+        function showAddMappingForm() {
+            document.getElementById('mappingForm').style.display = 'block';
+        }
+
+        function hideMappingForm() {
+            document.getElementById('mappingForm').style.display = 'none';
+        }
+
+        async function addMapping(event) {
+            event.preventDefault();
+            const patientId = document.getElementById('mappingPatient').value;
+            const doctorId = document.getElementById('mappingDoctor').value;
+
+            try {
+                const response = await fetchWithAuth(`${API_BASE}/mappings/`, {
+                    method: 'POST',
+                    body: JSON.stringify({ patient: patientId, doctor: doctorId })
+                });
+
+                if (response.ok) {
+                    showMessage('Mapping added successfully!', 'success');
+                    hideMappingForm();
+                    loadMappings();
+                } else {
+                    const data = await response.json();
+                    showMessage(data.message || 'Failed to add mapping', 'error');
+                }
+            } catch (error) {
+                console.error('Add mapping error:', error);
+                showMessage('Network error. Please try again.', 'error');
+            }
+        }
+
+        async function deleteMapping(id) {
+            if (confirm('Are you sure you want to delete this mapping?')) {
+                try {
+                    const response = await fetchWithAuth(`${API_BASE}/mappings/${id}/`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        showMessage('Mapping deleted successfully!', 'success');
+                        loadMappings();
+                    } else {
+                        showMessage('Failed to delete mapping', 'error');
+                    }
+                } catch (error) {
+                    console.error('Delete mapping error:', error);
+                    showMessage('Network error. Please try again.', 'error');
+                }
+            }
+        }
+
+        // Utility Functions
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            messageContainer.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
