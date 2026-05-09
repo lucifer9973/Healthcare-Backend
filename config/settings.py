@@ -159,35 +159,28 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
-# Configure CORS based on environment
-if IS_VERCEL or not DEBUG:
-    # Production/Vercel environment
-    CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=[
-        "https://healthcare-backend-liart.vercel.app",
-        "https://*.vercel.app",
-        "http://localhost:3000",
-        "https://localhost:3000"
-    ])
-    
-    # Add dynamic Vercel URL
-    vercel_url = env("VERCEL_URL", default="")
-    if vercel_url:
-        CORS_ALLOWED_ORIGINS.append(f"https://{vercel_url}.vercel.app")
-else:
-    # Development environment
-    CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=[
-        "http://localhost:8000", 
-        "http://127.0.0.1:8000", 
-        "http://localhost:3000", 
-        "http://127.0.0.1:3000"
-    ])
+# Configure CORS for both development and production
+CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=[
+    "https://healthcare-backend-liart.vercel.app",
+    "https://*.vercel.app",
+    "http://localhost:3000",
+    "https://localhost:3000",
+    "http://localhost:8000", 
+    "http://127.0.0.1:8000"
+])
+
+# Add dynamic Vercel URL if available
+vercel_url = env("VERCEL_URL", default="")
+if vercel_url:
+    CORS_ALLOWED_ORIGINS.append(f"https://{vercel_url}.vercel.app")
 
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[
     "http://localhost:8000", 
     "http://127.0.0.1:8000"
 ])
 
-if IS_VERCEL or not DEBUG:
+# Add production CSRF origins
+if not DEBUG:
     vercel_url = env("VERCEL_URL", default="")
     if vercel_url:
         CSRF_TRUSTED_ORIGINS.append(f"https://{vercel_url}.vercel.app")
