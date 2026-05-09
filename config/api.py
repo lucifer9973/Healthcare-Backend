@@ -2,9 +2,9 @@ from django.http import JsonResponse
 from django.conf import settings
 
 
-def api_index(request):
+def api_root(request):
     """
-    API root endpoint for Vercel deployment
+    API root endpoint for deployment
     """
     return JsonResponse({
         "message": "Healthcare Backend API",
