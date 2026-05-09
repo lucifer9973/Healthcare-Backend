@@ -4,21 +4,7 @@ from django.http import JsonResponse
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 
-def api_root(request):
-    return JsonResponse({
-        "message": "Healthcare Backend API",
-        "version": "1.0.0",
-        "endpoints": {
-            "auth": "/api/auth/",
-            "patients": "/api/patients/",
-            "doctors": "/api/doctors/",
-            "mappings": "/api/mappings/",
-            "docs": "/api/docs/",
-            "redoc": "/api/redoc/",
-            "schema": "/api/schema/",
-            "admin": "/admin/"
-        }
-    })
+from .api import api_root
 
 
 urlpatterns = [
