@@ -84,16 +84,11 @@ AUTH_USER_MODEL = "authentication.User"
 
 # Database configuration
 if not DEBUG:
-    # Production database configuration
+    # Production database configuration - use SQLite for now
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": env("DB_NAME", default="healthcare_db"),
-            "USER": env("DB_USER", default="healthcare_user"),
-            "PASSWORD": env("DB_PASSWORD", default=""),
-            "HOST": env("DB_HOST", default="localhost"),
-            "PORT": env("DB_PORT", default="5432"),
-            "CONN_MAX_AGE": env.int("DB_CONN_MAX_AGE", default=60),
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 else:
@@ -162,14 +157,16 @@ SPECTACULAR_SETTINGS = {
 }
 
 # Configure CORS for both development and production
-CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=[
+CORS_ALLOWED_ORIGINS = [
     "https://healthcare-backend-liart.vercel.app",
     "https://*.vercel.app",
+    "https://healthcare-backend-1f7x.onrender.com",
+    "https://*.onrender.com",
     "http://localhost:3000",
     "https://localhost:3000",
     "http://localhost:8000", 
     "http://127.0.0.1:8000"
-])
+]
 
 # Add dynamic Vercel URL if available
 vercel_url = env("VERCEL_URL", default="")
