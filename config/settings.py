@@ -13,13 +13,15 @@ env = environ.Env(
 environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY", default="unsafe-dev-key-change-me")
-DEBUG = env("DEBUG", default=False)
 
 # Detect if running on Vercel
 IS_VERCEL = env("VERCEL", default="") == "1"
 
+# Force DEBUG to False in production
+DEBUG = env("DEBUG", default=False)
+
 # Configure ALLOWED_HOSTS based on environment
-if IS_VERCEL or not DEBUG:
+if IS_VERCEL:
     # Production/Vercel environment
     ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=[
         "healthcare-backend-liart.vercel.app",
