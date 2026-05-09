@@ -18,14 +18,14 @@ SECRET_KEY = env("SECRET_KEY", default="unsafe-dev-key-change-me")
 DEBUG = False
 
 # Set ALLOWED_HOSTS for both development and production
-ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=[
+ALLOWED_HOSTS = [
     "healthcare-backend-liart.vercel.app",
     "*.vercel.app",
     "healthcare-backend-1f7x.onrender.com",
     "*.onrender.com",
     "localhost",
     "127.0.0.1"
-])
+]
 
 # Add dynamic Vercel URL if available
 vercel_url = env("VERCEL_URL", default="")
