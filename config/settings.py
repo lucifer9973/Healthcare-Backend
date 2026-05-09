@@ -14,32 +14,21 @@ environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY", default="unsafe-dev-key-change-me")
 
-# Detect if running on Vercel
-IS_VERCEL = env("VERCEL", default="") == "1"
-
-# Force DEBUG to False in production
+# Force DEBUG to False for production
 DEBUG = env("DEBUG", default=False)
 
-# Configure ALLOWED_HOSTS based on environment
-if IS_VERCEL:
-    # Production/Vercel environment
-    ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=[
-        "healthcare-backend-liart.vercel.app",
-        "*.vercel.app",
-        "localhost",
-        "127.0.0.1"
-    ])
-    
-    # Add dynamic Vercel URL
-    vercel_url = env("VERCEL_URL", default="")
-    if vercel_url:
-        ALLOWED_HOSTS.append(f"{vercel_url}.vercel.app")
-else:
-    # Development environment
-    ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=[
-        "localhost",
-        "127.0.0.1"
-    ])
+# Set ALLOWED_HOSTS for both development and production
+ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=[
+    "healthcare-backend-liart.vercel.app",
+    "*.vercel.app",
+    "localhost",
+    "127.0.0.1"
+])
+
+# Add dynamic Vercel URL if available
+vercel_url = env("VERCEL_URL", default="")
+if vercel_url:
+    ALLOWED_HOSTS.append(f"{vercel_url}.vercel.app")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
