@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-
+# sample login
 @pytest.mark.django_db
 def test_register_creates_user(api_client):
     response = api_client.post(
